@@ -1,8 +1,8 @@
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import CreateIcon from '@mui/icons-material/Create';
 import Button from '@mui/material/Button'
-import React, {useState} from 'react'
-
+import React, {useState,useEffect} from 'react'
+import { db } from "@/firebase/firebase"
 
 
 export const LinkForm=(props)=>{
@@ -23,37 +23,55 @@ const handleInputChange = (e) =>{
     const handleSubmit = (e) =>{
         e.preventDefault();
         props.addOrEditLink(values);
+        setValues({...initialStateValues})
     }
+ 
+    const getLinkById =async (id) =>{
+    const doc = await    db.collection("links").doc(id).get();
+    setValues({...doc.data()})
+    }
+
+
+
+useEffect(()=>{
+    console.log(props.currentId)
+ if(props.currentId === ''){
+    setValues({...initialStateValues});
+ }else{
+    getLinkById(props.currentId);
+ }
+},[props.currentId]);
+
 
 
 return (<> 
     <form className="card card-body" onSubmit={handleSubmit} >
 <div className="input-group-text bg-ligth">
-<h1>Insertar tu direccion aqui</h1>
+<h1> Tu direccion aqui</h1>
 <InsertLinkIcon/>
 </div>
 
 <div className="form-group" input-group>
-<input type="text" className="form-control" placeholder="https://" name="url" onChange={handleInputChange}></input>
+<input type="text" className="form-control" placeholder="https://" name="url" onChange={handleInputChange} value={values.url}></input>
     </div>
 
 <div className="form-group" input-group>
 <div className="input-group-text bg-light">
-    <h1>Crear tu nombre aqui</h1>
+    <h1> tu nombre aqui</h1>
    <CreateIcon>Crear</CreateIcon>
 </div>
 <input type="text" className="form-control" name="name" placeholder="tu nombre aqui" 
-onChange={handleInputChange}/>
+onChange={handleInputChange} value={values.name}/>
     </div>
 
 
 <div className="form-group">
-  <textarea name="description" rows="3" className="form-control" placeholder="escribe una description"
-  onChange={handleInputChange}></textarea>
+<textarea name="description" rows="3" className="form-control" placeholder="escribe una description"
+  onChange={handleInputChange} value={values.description}></textarea>
 </div>
 
 <Button variant="contained" color="warning" onClick={handleSubmit}>
-  Save
+  {props.currentId === '' ?'Guardar':'actualizar'}
 </Button>
 
 

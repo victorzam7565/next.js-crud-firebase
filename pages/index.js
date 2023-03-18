@@ -3,9 +3,9 @@ import Image from 'next/image'
 import { Inter } from 'next/font/google'
 import styles from '@/styles/Home.module.css'
 
-import { Link } from '@/components/links.js';
+import { Linke } from '@/components/links.js';
 import { LinkForm } from '@/components/linkForm.js';
-
+import { ToastContainer } from 'react-toastify';
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,9 +23,10 @@ export default function Home() {
 
         <div className="container p-4">
           <div className="row">
-<Link/>
+<Linke/>
 
 </div>
+<ToastContainer/>
 </div>
       </main>
     </>
